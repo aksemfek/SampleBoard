@@ -1,16 +1,18 @@
 package org.sample.backend.config;
 
 import io.jsonwebtoken.*;
+import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import javax.crypto.SecretKey;
 import java.util.Date;
 
 @Component
 public class JwtTokenProvider {
 
-    @Value("${jwt.secret}")
-    private String jwtSecret;
+    // HS512에 적합한 서명 키 생성
+    private final SecretKey jwtSecretKey = Keys.secretKeyFor(SignatureAlgorithm.HS512);
 
     @Value("${jwt.expiration}")
     private long jwtExpirationMs;
@@ -22,16 +24,17 @@ public class JwtTokenProvider {
 
         return Jwts.builder()
                 .setSubject(username)
-                .setIssuedAt(new Date())
+                .setIssuedAt(now)
                 .setExpiration(expiryDate)
-                .signWith(SignatureAlgorithm.HS512, jwtSecret)
+                .signWith(jwtSecretKey)
                 .compact();
     }
 
     // JWT 토큰에서 사용자 이름 추출
     public String getUsernameFromJwt(String token) {
-        return Jwts.parser()
-                .setSigningKey(jwtSecret)
+        return Jwts.parserBuilder()
+                .setSigningKey(jwtSecretKey)
+                .build()
                 .parseClaimsJws(token)
                 .getBody()
                 .getSubject();
@@ -40,11 +43,13 @@ public class JwtTokenProvider {
     // JWT 토큰 유효성 검사
     public boolean validateToken(String token) {
         try {
-            Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(token);
+            Jwts.parserBuilder()
+                    .setSigningKey(jwtSecretKey)
+                    .build()
+                    .parseClaimsJws(token);
             return true;
-        } catch (SignatureException | MalformedJwtException | ExpiredJwtException | UnsupportedJwtException | IllegalArgumentException e) {
+        } catch (JwtException e) {
             return false;
         }
     }
 }
-

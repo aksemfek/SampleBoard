@@ -48,7 +48,7 @@ function SignUp() {
                 <form onSubmit={handleSubmit}>
                     <input
                         type="text"
-                        placeholder="Username"
+                        placeholder="Id"
                         value={username}
                         onChange={(e) => setUsername(e.target.value)}
                         required

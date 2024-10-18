@@ -18,13 +18,18 @@ function Login({ setIsLoggedIn }) {
             });
 
             if (response.data.success) {
+                // JWT 토큰을 로컬 스토리지에 저장
+                const token = response.data.token;
+                localStorage.setItem('token', token);
+
+                // 로그인 상태 설정 및 게시판 페이지로 이동
                 setIsLoggedIn(true);
                 navigate('/'); // 로그인 성공 후 게시판으로 이동
             } else {
                 alert('로그인 실패: ' + response.data.message);
             }
         } catch (error) {
-            alert('서버 오류 발생');
+            alert('서버 오류 발생: ' + error.message);
         }
     };
 

@@ -1,9 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../css/Board.css';  // CSS 파일을 import
 
 function Board() {
-    // 게시글 데이터 (하드코딩된 임의의 값)
     const [posts] = useState([
         { id: 1, title: "첫 번째 게시글", content: "이것은 첫 번째 게시글의 내용입니다." },
         { id: 2, title: "두 번째 게시글", content: "이것은 두 번째 게시글의 내용입니다." },
@@ -20,6 +19,14 @@ function Board() {
     const [currentPage, setCurrentPage] = useState(1); // 현재 페이지 상태
     const postsPerPage = 5; // 한 페이지에 보여줄 게시글 수
     const navigate = useNavigate();
+    const token = localStorage.getItem('token'); // 새로고침 시에도 토큰을 가져옴
+
+    // 새로고침 후에도 인증 상태를 유지하기 위한 effect
+    useEffect(() => {
+        if (!token) {
+            navigate('/login');  // 토큰이 없으면 로그인 페이지로 이동
+        }
+    }, [token, navigate]);
 
     // 현재 페이지에 해당하는 게시글을 계산
     const indexOfLastPost = currentPage * postsPerPage;
@@ -47,6 +54,7 @@ function Board() {
     return (
         <div className="board-container">
             <h1 className="board-title">게시판</h1>
+
             <button className="create-button" onClick={handleCreateClick}>글 쓰기</button> {/* 글 쓰기 버튼 */}
             <ul className="post-list">
                 {currentPosts.map(post => (
