@@ -11,13 +11,11 @@ import java.util.Date;
 @Component
 public class JwtTokenProvider {
 
-    // HS512에 적합한 서명 키 생성
     private final SecretKey jwtSecretKey = Keys.secretKeyFor(SignatureAlgorithm.HS512);
 
     @Value("${jwt.expiration}")
     private long jwtExpirationMs;
 
-    // JWT 토큰 생성
     public String generateToken(String username) {
         Date now = new Date();
         Date expiryDate = new Date(now.getTime() + jwtExpirationMs);
@@ -30,7 +28,6 @@ public class JwtTokenProvider {
                 .compact();
     }
 
-    // JWT 토큰에서 사용자 이름 추출
     public String getUsernameFromJwt(String token) {
         return Jwts.parserBuilder()
                 .setSigningKey(jwtSecretKey)
@@ -40,7 +37,6 @@ public class JwtTokenProvider {
                 .getSubject();
     }
 
-    // JWT 토큰 유효성 검사
     public boolean validateToken(String token) {
         try {
             Jwts.parserBuilder()
