@@ -1,32 +1,31 @@
-/* 전체 페이지 레이아웃 */
+/* 전체 레이아웃 */
 .container {
     display: flex;
     justify-content: center;
     align-items: center;
     min-height: 100vh;
-    background-color: #f0f0f0;
+    background-color: #f4f4f4;
 }
 
-/* 로그인 및 회원가입 폼 스타일 */
+/* 글쓰기 폼 컨테이너 */
 .form-container {
     background-color: white;
     padding: 40px;
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    width: 300px;
-    text-align: center;
+    width: 400px;
 }
 
 h1 {
     margin-bottom: 20px;
     font-size: 24px;
     color: #333;
+    text-align: center;
 }
 
 /* 입력 필드 스타일 */
 input[type="text"],
-input[type="password"],
-input[type="email"] {  /* 이메일 필드 스타일 추가 */
+textarea {
     width: 100%;
     padding: 10px;
     margin: 10px 0;
@@ -34,6 +33,12 @@ input[type="email"] {  /* 이메일 필드 스타일 추가 */
     border-radius: 4px;
     box-sizing: border-box;
     font-size: 16px;
+}
+
+/* textarea 스타일 */
+textarea {
+    height: 150px;
+    resize: none;
 }
 
 /* 버튼 스타일 */
@@ -51,35 +56,4 @@ button {
 
 button:hover {
     background-color: #45a049;
-}
-
-/* 회원가입 버튼 추가 스타일 */
-.signup-button {
-    background-color: #007bff;
-    margin-top: 10px;
-}
-
-.signup-button:hover {
-    background-color: #0056b3;
-}
-
-/* 오류 메시지 스타일 */
-.error-message {
-    color: red;
-    margin-top: 10px;
-    font-size: 14px;
-}
-
-/* 성공 메시지 스타일 */
-.success-message {
-    color: green;
-    margin-top: 10px;
-    font-size: 14px;
-}
-
-/* 폼 하단 텍스트 */
-.form-footer {
-    margin-top: 20px;
-    color: #666;
-    font-size: 14px;
 }

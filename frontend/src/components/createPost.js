@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import '../css/CreatePost.css';  // CSS 파일 임포트
 
 function CreatePost() {
     const [title, setTitle] = useState('');
@@ -15,28 +16,30 @@ function CreatePost() {
     };
 
     return (
-        <div>
-            <h1>글 쓰기</h1>
-            <form onSubmit={handleSubmit}>
-                <div>
-                    <label>제목</label>
-                    <input
-                        type="text"
-                        value={title}
-                        onChange={(e) => setTitle(e.target.value)}
-                        required
-                    />
-                </div>
-                <div>
-                    <label>내용</label>
-                    <textarea
-                        value={content}
-                        onChange={(e) => setContent(e.target.value)}
-                        required
-                    />
-                </div>
-                <button type="submit">저장</button>
-            </form>
+        <div className="container">
+            <div className="form-container">
+                <h1>글 쓰기</h1>
+                <form onSubmit={handleSubmit}>
+                    <div>
+                        <label>제목</label>
+                        <input
+                            type="text"
+                            value={title}
+                            onChange={(e) => setTitle(e.target.value)}
+                            required
+                        />
+                    </div>
+                    <div>
+                        <label>내용</label>
+                        <textarea
+                            value={content}
+                            onChange={(e) => setContent(e.target.value)}
+                            required
+                        />
+                    </div>
+                    <button type="submit">저장</button>
+                </form>
+            </div>
         </div>
     );
 }
