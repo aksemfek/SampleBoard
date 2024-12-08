@@ -2,10 +2,8 @@ package org.sample.backend.controller;
 
 import org.sample.backend.entity.Comment;
 import org.sample.backend.entity.Post;
-import org.sample.backend.entity.User;
 import org.sample.backend.service.CommentService;
 import org.sample.backend.service.PostService;
-import org.sample.backend.service.UserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -14,48 +12,49 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/comments")
+@RequestMapping("/api/posts")
 public class CommentController {
 
     private final CommentService commentService;
     private final PostService postService;
-    private final UserService userService;
 
-    public CommentController(CommentService commentService, PostService postService, UserService userService) {
+    public CommentController(CommentService commentService, PostService postService) {
         this.commentService = commentService;
         this.postService = postService;
-        this.userService = userService;
     }
 
-    @GetMapping("/{postId}")
+    // 특정 게시글의 댓글 목록 가져오기
+    @GetMapping("/{postId}/comments")
     public ResponseEntity<List<Comment>> getCommentsByPost(@PathVariable Long postId) {
-        Post post = postService.getPostById(postId).orElseThrow();
+        Post post = postService.getPostById(postId)
+                .orElseThrow(() -> new RuntimeException("Post not found"));
         List<Comment> comments = commentService.getCommentsByPost(post);
         return ResponseEntity.ok(comments);
     }
 
-    @PostMapping("/{postId}")
+    // 댓글 추가
+    @PostMapping("/{postId}/comments")
     public ResponseEntity<Comment> addComment(
             @PathVariable Long postId,
             @RequestBody Comment comment,
             @AuthenticationPrincipal UserDetails userDetails) {
 
-        Post post = postService.getPostById(postId).orElseThrow();
-        User user = userService.getUserByUsername(userDetails.getUsername()).orElseThrow();
+        Post post = postService.getPostById(postId)
+                .orElseThrow(() -> new RuntimeException("Post not found"));
 
-        comment.setPost(post);
-        comment.setUser(user);
-
-        Comment savedComment = commentService.addComment(comment);
-        return ResponseEntity.ok(savedComment);
+        String username = userDetails.getUsername();
+        Comment createdComment = commentService.addComment(post, username, comment);
+        return ResponseEntity.ok(createdComment);
     }
 
-    @DeleteMapping("/{commentId}")
+    // 댓글 삭제
+    @DeleteMapping("/{postId}/comments/{commentId}")
     public ResponseEntity<Void> deleteComment(
+            @PathVariable Long postId,
             @PathVariable Long commentId,
             @AuthenticationPrincipal UserDetails userDetails) {
 
-        Comment comment = commentService.getCommentsByPost(commentId)
+        Comment comment = commentService.getCommentById(commentId)
                 .orElseThrow(() -> new RuntimeException("Comment not found"));
 
         if (!comment.getUser().getUsername().equals(userDetails.getUsername())) {
