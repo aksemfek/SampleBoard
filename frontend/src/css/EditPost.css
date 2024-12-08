@@ -1,57 +1,79 @@
-/* 수정 화면 컨테이너 */
-.edit-post-container {
-    background-color: white;
-    padding: 30px;
+/* 댓글 섹션 스타일 */
+.comments-section {
+    margin-top: 30px;
+    padding: 20px;
+    background-color: #f9f9f9;
     border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    width: 600px;
-    margin: 0 auto;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* 댓글 섹션 제목 스타일 */
+.comments-section h2 {
+    font-size: 22px;
+    color: #333;
+    margin-bottom: 20px;
     text-align: center;
 }
 
-/* 제목과 내용 입력 폼 스타일 */
-.form-group {
-    margin-bottom: 20px;
+/* 댓글 목록 스타일 */
+.comments-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
 }
 
-label {
-    display: block;
-    font-weight: bold;
-    margin-bottom: 5px;
-}
-
-input, textarea {
-    width: 100%;
+.comment-item {
+    margin-bottom: 15px;
     padding: 10px;
-    font-size: 16px;
-    border: 1px solid #ccc;
+    background-color: white;
     border-radius: 5px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    font-size: 16px;
+    color: #555;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
-/* 저장 및 취소 버튼 스타일 */
-button {
+/* 댓글 작성자와 내용 */
+.comment-item p {
+    margin: 0;
+    word-wrap: break-word; /* 긴 댓글 내용 줄바꿈 */
+}
+
+/* 댓글 작성 섹션 스타일 */
+.add-comment {
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* 댓글 입력 필드 */
+.add-comment textarea {
+    width: 100%;
+    max-width: 550px;
+    height: 100px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    resize: none;
+    font-size: 14px;
+}
+
+/* 댓글 작성 버튼 */
+.add-comment button {
     padding: 10px 20px;
-    margin: 10px;
+    background-color: #4CAF50;
+    color: white;
     border: none;
     border-radius: 5px;
     cursor: pointer;
-    font-size: 16px;
+    font-size: 14px;
 }
 
-.save-button {
-    background-color: #4CAF50;
-    color: white;
-}
-
-.save-button:hover {
+.add-comment button:hover {
     background-color: #45a049;
-}
-
-.cancel-button {
-    background-color: #f44336;
-    color: white;
-}
-
-.cancel-button:hover {
-    background-color: #d32f2f;
 }

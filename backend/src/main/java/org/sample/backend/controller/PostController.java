@@ -69,4 +69,5 @@ public class PostController {
 
         return ResponseEntity.ok(savedPost);
     }
+
 }

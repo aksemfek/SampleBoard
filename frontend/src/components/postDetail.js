@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import '../css/PostDetail.css';
+import Comments from './comments'; // 댓글 컴포넌트 임포트
+import '../css/PostDetail.css'; // 스타일 임포트
 
 function PostDetail() {
     const { id } = useParams();
@@ -16,11 +17,12 @@ function PostDetail() {
             return;
         }
 
-        axios.get(`http://localhost:8080/api/posts/${id}`, {
-            headers: {
-                Authorization: `Bearer ${token}`,
-            },
-        })
+        axios
+            .get(`http://localhost:8080/api/posts/${id}`, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            })
             .then((response) => {
                 setPost(response.data);
                 const currentUser = JSON.parse(atob(token.split('.')[1])).sub; // JWT 토큰에서 사용자 정보 추출
@@ -48,6 +50,7 @@ function PostDetail() {
                         )}
                         <h1>{post.title}</h1>
                         <p>{post.content}</p>
+                        <Comments postId={id} /> {/* 댓글 컴포넌트 렌더링 */}
                         <button onClick={() => navigate(-1)}>뒤로가기</button>
                     </>
                 ) : (
