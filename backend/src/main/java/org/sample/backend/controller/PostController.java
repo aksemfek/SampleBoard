@@ -44,4 +44,29 @@ public class PostController {
         Optional<Post> post = postService.getPostById(id);
         return post.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
+
+    // 게시글 수정
+    @PutMapping("/{id}")
+    public ResponseEntity<Post> updatePost(@PathVariable Long id, @RequestBody Post updatedPost, @AuthenticationPrincipal UserDetails userDetails) {
+        // 게시글 조회
+        Optional<Post> postOptional = postService.getPostById(id);
+        if (postOptional.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        Post existingPost = postOptional.get();
+
+        // 작성자 확인
+        String username = userDetails.getUsername();
+        if (!existingPost.getUser().getUsername().equals(username)) {
+            return ResponseEntity.status(403).build(); // 작성자가 아니면 403 Forbidden 반환
+        }
+
+        // 게시글 업데이트
+        existingPost.setTitle(updatedPost.getTitle());
+        existingPost.setContent(updatedPost.getContent());
+        Post savedPost = postService.updatePost(existingPost);
+
+        return ResponseEntity.ok(savedPost);
+    }
 }

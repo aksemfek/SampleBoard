@@ -1,31 +1,57 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import '../css/PostDetail.css';  // CSS 파일 임포트
+import axios from 'axios';
+import '../css/PostDetail.css';
 
 function PostDetail() {
-    const [posts] = useState([
-        { id: 1, title: "첫 번째 게시글", content: "이것은 첫 번째 게시글의 내용입니다." },
-        { id: 2, title: "두 번째 게시글", content: "이것은 두 번째 게시글의 내용입니다." },
-        { id: 3, title: "세 번째 게시글", content: "이것은 세 번째 게시글의 내용입니다." },
-        { id: 4, title: "네 번째 게시글", content: "이것은 네 번째 게시글의 내용입니다." },
-        { id: 5, title: "다섯 번째 게시글", content: "이것은 다섯 번째 게시글의 내용입니다." }
-    ]);
-
     const { id } = useParams();
-    const post = posts.find(p => p.id === parseInt(id));
     const navigate = useNavigate();
+    const [post, setPost] = useState(null);
+    const [isAuthor, setIsAuthor] = useState(false);
+
+    useEffect(() => {
+        const token = localStorage.getItem('token');
+        if (!token) {
+            navigate('/login');
+            return;
+        }
+
+        axios.get(`http://localhost:8080/api/posts/${id}`, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        })
+            .then((response) => {
+                setPost(response.data);
+                const currentUser = JSON.parse(atob(token.split('.')[1])).sub; // JWT 토큰에서 사용자 정보 추출
+                setIsAuthor(currentUser === response.data.user.username);
+            })
+            .catch((error) => {
+                console.error('Failed to fetch post:', error);
+                navigate('/login');
+            });
+    }, [id, navigate]);
+
+    const handleEditClick = () => {
+        navigate(`/edit/${id}`);
+    };
 
     return (
         <div className="container">
             <div className="post-container">
                 {post ? (
                     <>
+                        {isAuthor && (
+                            <button className="edit-button" onClick={handleEditClick}>
+                                수정
+                            </button>
+                        )}
                         <h1>{post.title}</h1>
                         <p>{post.content}</p>
                         <button onClick={() => navigate(-1)}>뒤로가기</button>
                     </>
                 ) : (
-                    <p>해당 게시글을 찾을 수 없습니다.</p>
+                    <p>게시글을 불러오는 중입니다...</p>
                 )}
             </div>
         </div>

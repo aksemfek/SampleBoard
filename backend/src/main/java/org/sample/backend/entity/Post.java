@@ -1,6 +1,7 @@
 package org.sample.backend.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -38,6 +39,6 @@ public class Post {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
-    @JsonIgnore // 직렬화 방지
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"}) // Lazy Loading 문제 방지
     private User user;
 }

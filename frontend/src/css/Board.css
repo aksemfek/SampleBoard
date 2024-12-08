@@ -6,6 +6,7 @@
     background-color: #f9f9f9;
     border-radius: 8px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    position: relative; /* 자식 요소의 절대 위치 지정 가능 */
 }
 
 /* 게시판 타이틀 */
@@ -18,15 +19,18 @@
 
 /* 글쓰기 버튼 */
 .create-button {
-    display: block;
-    margin: 10px 0;
-    padding: 10px 20px;
+    position: absolute; /* 부모 요소의 위치를 기준으로 고정 */
+    top: 20px; /* 위에서의 거리 */
+    right: 20px; /* 오른쪽에서의 거리 */
+    padding: 5px 15px;
     background-color: #4CAF50;
     color: white;
     border: none;
     border-radius: 4px;
     cursor: pointer;
     font-size: 16px;
+    width: auto; /* 버튼 너비 조정 */
+    height: auto; /* 버튼 높이 조정 */
 }
 
 .create-button:hover {
@@ -67,13 +71,20 @@
 
 .pagination-button {
     margin: 0 5px;
-    padding: 8px 12px;
+    padding: 10px; /* 버튼의 내부 여백을 고정 */
     background-color: #007bff;
     color: white;
     border: none;
     border-radius: 4px;
     cursor: pointer;
     font-size: 14px;
+    width: 40px; /* 버튼 크기를 일정하게 고정 */
+    height: 40px; /* 높이도 고정 */
+    display: flex;
+    justify-content: center; /* 텍스트 가운데 정렬 */
+    align-items: center; /* 텍스트 세로 정렬 */
+    text-align: center;
+    box-sizing: border-box; /* 패딩 포함한 크기 계산 */
 }
 
 .pagination-button.active {
@@ -83,3 +94,4 @@
 .pagination-button:hover {
     background-color: #0056b3;
 }
+

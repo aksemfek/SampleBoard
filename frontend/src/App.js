@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from 'react';  // useEffect 추가
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 import Board from './components/board';   // 게시판 목록 컴포넌트
 import PostDetail from './components/postDetail';  // 게시글 상세 페이지 컴포넌트
 import CreatePost from './components/createPost';  // 글 쓰기 페이지 컴포넌트
+import EditPost from './components/editPost';  // 게시글 수정 페이지 컴포넌트
 import Login from './components/login'; // 로그인 페이지
 import SignUp from './components/signUp'; // 회원가입 페이지
 import PrivateRoute from './privateRoute'; // 보호된 경로
@@ -26,9 +27,20 @@ function App() {
                 <Route path="/signup" element={<SignUp />} />
 
                 {/* 보호된 페이지 (로그인이 필요) */}
-                <Route path="/" element={<PrivateRoute isLoggedIn={isLoggedIn}><Board /></PrivateRoute>} />
+                <Route
+                    path="/"
+                    element={
+                        isLoggedIn ? (
+                            <Navigate to="/board" replace />
+                        ) : (
+                            <Navigate to="/login" replace />
+                        )
+                    }
+                />
+                <Route path="/board" element={<PrivateRoute isLoggedIn={isLoggedIn}><Board /></PrivateRoute>} />
                 <Route path="/post/:id" element={<PrivateRoute isLoggedIn={isLoggedIn}><PostDetail /></PrivateRoute>} />
                 <Route path="/create" element={<PrivateRoute isLoggedIn={isLoggedIn}><CreatePost /></PrivateRoute>} />
+                <Route path="/edit/:id" element={<PrivateRoute isLoggedIn={isLoggedIn}><EditPost /></PrivateRoute>} />
             </Routes>
         </Router>
     );

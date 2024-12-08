@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import '../css/LoginSignUp.css';  // CSS 파일 임포트
+import '../css/LoginSignUp.css';
 
 function Login({ setIsLoggedIn }) {
     const [username, setUsername] = useState('');
@@ -18,9 +18,10 @@ function Login({ setIsLoggedIn }) {
             });
 
             if (response.data.success) {
-                localStorage.setItem('token', response.data.token);  // JWT 토큰을 localStorage에 저장
+                const token = response.data.token; // 서버에서 받은 JWT 토큰
+                localStorage.setItem('token', token); // JWT 토큰을 로컬 스토리지에 저장
                 setIsLoggedIn(true);
-                navigate('/');  // 로그인 성공 후 게시판으로 이동
+                navigate('/'); // 로그인 성공 후 게시판으로 이동
             } else {
                 alert('로그인 실패: ' + response.data.message);
             }
