@@ -5,6 +5,8 @@ import org.sample.backend.entity.User;
 import org.sample.backend.service.PostService;
 import org.sample.backend.service.UserService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -22,28 +24,18 @@ public class PostController {
         this.userService = userService;
     }
 
-    // 게시글 생성
     @PostMapping
-    public ResponseEntity<Post> createPost(@RequestBody Post post, @RequestParam Long userId) {
-        // 사용자 조회
-        Optional<User> userOptional = userService.getUserById(userId);
-        if (userOptional.isEmpty()) {
-            return ResponseEntity.badRequest().build(); // 잘못된 사용자 ID
-        }
-
-        // 사용자 설정
-        post.setUser(userOptional.get());
-
-        // 게시글 생성
+    public ResponseEntity<Post> createPost(@RequestBody Post post, @AuthenticationPrincipal UserDetails userDetails) {
+        String username = userDetails.getUsername();
+        User user = userService.getUserByUsername(username).orElseThrow();
+        post.setUser(user);
         Post createdPost = postService.createPost(post);
         return ResponseEntity.ok(createdPost);
     }
 
-    // 모든 게시글 조회
     @GetMapping
     public ResponseEntity<List<Post>> getAllPosts() {
-        List<Post> posts = postService.getAllPosts();
-        return ResponseEntity.ok(posts);
+        return ResponseEntity.ok(postService.getAllPosts());
     }
 
     // 특정 게시글 조회

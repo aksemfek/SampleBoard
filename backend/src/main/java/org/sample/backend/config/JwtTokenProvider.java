@@ -2,7 +2,6 @@ package org.sample.backend.config;
 
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
@@ -12,9 +11,7 @@ import java.util.Date;
 public class JwtTokenProvider {
 
     private final SecretKey jwtSecretKey = Keys.secretKeyFor(SignatureAlgorithm.HS512);
-
-    @Value("${jwt.expiration}")
-    private long jwtExpirationMs;
+    private final long jwtExpirationMs = 86400000; // 24시간
 
     public String generateToken(String username) {
         Date now = new Date();
@@ -44,8 +41,8 @@ public class JwtTokenProvider {
                     .build()
                     .parseClaimsJws(token);
             return true;
-        } catch (JwtException e) {
-            return false;
+        } catch (JwtException | IllegalArgumentException e) {
+            return false; // 유효하지 않은 토큰
         }
     }
 }
